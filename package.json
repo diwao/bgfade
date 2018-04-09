@@ -1,0 +1,24 @@
+{
+  "name": "bgfade",
+  "version": "0.0.1",
+  "description": "JavaScript library for switch DOM elements.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diwao/bgfade.git"
+  },
+  "keywords": [
+    "front-end",
+    "frontend",
+    "CSS"
+  ],
+  "author": "daisuke iwao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/diwao/bgfade/issues"
+  },
+  "homepage": "https://github.com/diwao/bgfade#readme"
+}
