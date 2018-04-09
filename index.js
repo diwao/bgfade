@@ -1,16 +1,23 @@
-module.exports = (id, speed = 1, duration = 5) => {
+module.exports = (id, speed, duration) => {
   'use strict';
+  if (typeof speed === 'undefined') {
+    speed = 3;
+  }
+  if (typeof duration === 'undefined') {
+    duration = 4;
+  }
   // vars
   let animeTimer = null;
   const fadeSpeed = speed;
   const fadeDuration = duration * 1000;
   const target = document.getElementById(id);
-  const items = this.target.querySelectorAll('li');
+  const items = target.querySelectorAll('li');
 
   // functions
   const setFadeStyle = (item, duration) => {
     item.style.transitionDuration = `${duration}s`;
     item.style.transitionProperty = 'opacity';
+    item.style.position = 'absolute';
   };
 
   const setZindex = (items) => {
@@ -34,21 +41,28 @@ module.exports = (id, speed = 1, duration = 5) => {
     }
   })();
 
-  const fade = (item, func) => {
-    console.log('test')
+  const setActive = (next) => {
+    let active = ++next;
+    if (active >= items.length) {
+      active = 0;
+    }
+    items[active].classList.add('bg-active');
+  }
+
+  const fadeOut = (item, func) => {
     item.style.opacity = 0;
     setTimeout(function(){
       if (func) {
         func();
       }
-      console.log('end');
+      item.classList.remove('bg-active');
     }, fadeSpeed * 1000);
   };
 
   const animate = () => {
-    var next = getNext();
-    console.log(next);
-    fade(items[next], function(){
+    const next = getNext();
+    setActive(next);
+    fadeOut(items[next], function(){
       if (next === 0) {
         items[next].style.zIndex = 0;
         items[next].style.opacity = 1;
@@ -59,6 +73,7 @@ module.exports = (id, speed = 1, duration = 5) => {
         }
       }
     });
+
     animeTimer = setTimeout(function(){
       animate();
     }, fadeDuration);
@@ -66,7 +81,9 @@ module.exports = (id, speed = 1, duration = 5) => {
 
   class BgFade {
     constructor(){
+      target.style.position = 'relative';
       setZindex(items);
+      setActive(-1);
       setTimeout(function(){
         animate();
       }, fadeDuration);
