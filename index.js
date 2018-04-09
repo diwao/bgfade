@@ -1,4 +1,4 @@
-module exports = (id, speed = 1, duration = 5) => {
+module.exports = (id, speed = 1, duration = 5) => {
   'use strict';
   // vars
   let animeTimer = null;
