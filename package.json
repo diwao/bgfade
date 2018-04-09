@@ -1,6 +1,6 @@
 {
   "name": "bgfade",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "JavaScript library for switch DOM elements.",
   "main": "index.js",
   "scripts": {
