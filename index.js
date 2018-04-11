@@ -1,15 +1,26 @@
-module.exports = (id, speed, duration) => {
+module.exports = (id, options) => {
   'use strict';
-  if (typeof speed === 'undefined') {
+  // default options value
+  let speed,
+      duration;
+
+  if (typeof options === 'object') {
+    speed = Number(options.speed);
+    duration = Number(options.duration);
+  }
+
+  if (isNaN(speed)) {
     speed = 3;
   }
-  if (typeof duration === 'undefined') {
+
+  if (isNaN(duration)) {
     duration = 4;
   }
+
   // vars
   let animeTimer = null;
-  const fadeSpeed = speed;
-  const fadeDuration = duration * 1000;
+  const fadeSpeed = Math.abs(speed);
+  const fadeDuration = Math.abs(duration) * 1000;
   const target = document.getElementById(id);
   const items = target.querySelectorAll('li');
 

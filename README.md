@@ -43,11 +43,11 @@ const bgfade = Bgfade('target');
 bgfade use some parameters.
 
 ```
-Bgfade(id, speed, duration);
+Bgfade(id, {speed: value, duration: value});
 ```
 
 | parameter | description |
 | ---- | ---- |
-| id | id name of target ul. must. |
-| speed | the time of fade out. default `3`|
-| duration | duration of fade out to fade out. default `4`|
+| id(String) | id name of target ul. must. |
+| speed(Number) | the time of fade out. default `3`.|
+| duration(Number) | duration of fade out to fade out. default `4`.|
