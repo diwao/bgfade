@@ -14,10 +14,12 @@ edit html file like below.
 <style>
  #target {
    height: 300px;
+   list-style: none;
    width: 300px;
  }
 
  #target li {
+   background-color: royalblue;
    font-size: 30px;
    height: 100%;
    text-align: center;
@@ -35,8 +37,8 @@ edit html file like below.
 
 edit js file like below.
 ```
-const Bgfade = require('bgfade');
-const bgfade = Bgfade('target');
+import bgfade from 'bgfade';
+const bg = Bgfade('target');
 ```
 
 ## Parameters
