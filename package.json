@@ -1,6 +1,6 @@
 {
   "name": "bgfade",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JavaScript library for switch DOM elements.",
   "main": "dist/bgfade.min.js",
   "files": [
@@ -14,7 +14,6 @@
     "type": "git",
     "url": "git+https://github.com/diwao/bgfade.git"
   },
-  "homepage": "https://bgfade.site",
   "keywords": [
     "front-end",
     "frontend",
@@ -25,7 +24,7 @@
   "bugs": {
     "url": "https://github.com/diwao/bgfade/issues"
   },
-  "homepage": "https://github.com/diwao/bgfade#readme",
+  "homepage": "https://bgfade.site",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1"
