@@ -38,7 +38,7 @@ edit html file like below.
 edit js file like below.
 ```
 import bgfade from 'bgfade';
-const bg = Bgfade('target');
+const bg = bgfade('target');
 ```
 
 ## Parameters
