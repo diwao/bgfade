@@ -1,14 +1,32 @@
 {
   "name": "bgfade",
-  "version": "1.0.1",
-  "description": "JavaScript library for switch DOM elements.",
-  "main": "dist/bgfade.min.js",
+  "version": "1.1.0",
+  "description": "A JavaScript library for fading between DOM elements.",
+  "type": "module",
+  "main": "./dist/bgfade.cjs",
+  "module": "./dist/bgfade.js",
+  "types": "./dist/bgfade.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/bgfade.d.ts",
+        "default": "./dist/bgfade.js"
+      },
+      "require": {
+        "types": "./dist/bgfade.d.cts",
+        "default": "./dist/bgfade.cjs"
+      }
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "watch": "babel ./src/bgfade.js -w -o ./dist/bgfade.js",
-    "build": "babel --compact=true ./src/bgfade.js -o ./dist/bgfade.min.js"
+    "build": "tsup && node scripts/write-cjs-wrapper.cjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "typecheck:exports": "tsc test/types/cjs-require.cts test/types/esm-import.mts --ignoreConfig --module Node16 --moduleResolution node16 --target es2020 --strict --skipLibCheck --noEmit --ignoreDeprecations 6.0 && node scripts/check-classic-types.cjs"
   },
   "repository": {
     "type": "git",
@@ -19,14 +37,17 @@
     "frontend",
     "CSS"
   ],
-  "author": "daisuke iwao",
+  "author": "Daisuke Iwao",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/diwao/bgfade/issues"
   },
   "homepage": "https://bgfade.site",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
+    "@types/node": "^25.6.0",
+    "jsdom": "^29.1.1",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   }
 }
