@@ -86,10 +86,33 @@ describe('bgfade', () => {
     expect(instance.currentIndex).toBe(-1);
 
     instance.start();
-    vi.advanceTimersByTime(2000);
-
     expect(instance.isRunning).toBe(true);
     expect(instance.currentIndex).toBe(0);
+
+    vi.advanceTimersByTime(2000);
+
+    expect(instance.currentIndex).toBe(1);
+  });
+
+  it('lets an in-flight fade finish after stop', () => {
+    const target = createList();
+    const items = Array.from(target.querySelectorAll<HTMLElement>('li'));
+
+    const instance = bgfade('target', {
+      speed: 2,
+      duration: 4,
+      autoStart: false,
+    });
+
+    instance.next();
+    vi.advanceTimersByTime(1000);
+    instance.stop();
+    vi.advanceTimersByTime(1000);
+
+    expect(instance.isRunning).toBe(false);
+    expect(items[0].classList.contains('bg-active')).toBe(false);
+    expect(items[0].style.opacity).toBe('1');
+    expect(items[0].style.zIndex).toBe('0');
   });
 
   it('can advance manually when autoStart is disabled', () => {
@@ -162,6 +185,25 @@ describe('bgfade', () => {
     expect(item.style.position).toBe('');
     expect(item.style.opacity).toBe('0.5');
     expect(item.classList.contains('is-active')).toBe(false);
+  });
+
+  it('clears in-flight fade timers on destroy', () => {
+    const target = createList();
+    const items = Array.from(target.querySelectorAll<HTMLElement>('li'));
+
+    const instance = bgfade('target', {
+      speed: 2,
+      duration: 4,
+      autoStart: false,
+    });
+
+    instance.next();
+    instance.destroy();
+    vi.advanceTimersByTime(2000);
+
+    expect(items[0].style.opacity).toBe('');
+    expect(items[0].style.zIndex).toBe('');
+    expect(items[0].classList.contains('bg-active')).toBe(false);
   });
 
   it('throws a clear error when target is missing', () => {

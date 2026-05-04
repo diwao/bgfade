@@ -49,7 +49,8 @@ var BgFade = class {
     this.setup();
     this.setActive(-1);
     if (this.options.autoStart) {
-      this.start();
+      this.active = true;
+      this.scheduleNext();
     }
   }
   get currentIndex() {
@@ -63,13 +64,11 @@ var BgFade = class {
       return;
     }
     this.active = true;
-    this.animationTimer = setTimeout(() => {
-      this.next();
-    }, this.options.duration * 1e3);
+    this.next();
   }
   stop() {
     this.active = false;
-    this.clearTimers();
+    this.clearAnimationTimer();
   }
   pause() {
     this.stop();
@@ -93,13 +92,12 @@ var BgFade = class {
       }
     });
     if (this.active) {
-      this.animationTimer = setTimeout(() => {
-        this.next();
-      }, this.options.duration * 1e3);
+      this.scheduleNext();
     }
   }
   destroy() {
     this.stop();
+    this.clearFadeTimer();
     this.target.style.position = this.originalTargetPosition;
     this.items.forEach((item, index) => {
       const original = this.originalItemStyles[index];
@@ -153,6 +151,11 @@ var BgFade = class {
   clearTimers() {
     this.clearAnimationTimer();
     this.clearFadeTimer();
+  }
+  scheduleNext() {
+    this.animationTimer = setTimeout(() => {
+      this.next();
+    }, this.options.duration * 1e3);
   }
   clearAnimationTimer() {
     if (this.animationTimer !== null) {

@@ -104,7 +104,8 @@ class BgFade implements BgFadeInstance {
     this.setActive(-1);
 
     if (this.options.autoStart) {
-      this.start();
+      this.active = true;
+      this.scheduleNext();
     }
   }
 
@@ -122,14 +123,12 @@ class BgFade implements BgFadeInstance {
     }
 
     this.active = true;
-    this.animationTimer = setTimeout(() => {
-      this.next();
-    }, this.options.duration * 1000);
+    this.next();
   }
 
   stop(): void {
     this.active = false;
-    this.clearTimers();
+    this.clearAnimationTimer();
   }
 
   pause(): void {
@@ -158,14 +157,13 @@ class BgFade implements BgFadeInstance {
     });
 
     if (this.active) {
-      this.animationTimer = setTimeout(() => {
-        this.next();
-      }, this.options.duration * 1000);
+      this.scheduleNext();
     }
   }
 
   destroy(): void {
     this.stop();
+    this.clearFadeTimer();
     this.target.style.position = this.originalTargetPosition;
     this.items.forEach((item, index) => {
       const original = this.originalItemStyles[index];
@@ -228,6 +226,12 @@ class BgFade implements BgFadeInstance {
   private clearTimers(): void {
     this.clearAnimationTimer();
     this.clearFadeTimer();
+  }
+
+  private scheduleNext(): void {
+    this.animationTimer = setTimeout(() => {
+      this.next();
+    }, this.options.duration * 1000);
   }
 
   private clearAnimationTimer(): void {
