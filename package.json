@@ -1,7 +1,7 @@
 {
   "name": "bgfade",
   "version": "1.1.0",
-  "description": "JavaScript library for switch DOM elements.",
+  "description": "A JavaScript library for fading between DOM elements.",
   "type": "module",
   "main": "./dist/bgfade.cjs",
   "module": "./dist/bgfade.js",

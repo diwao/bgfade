@@ -170,9 +170,11 @@ class BgFade implements BgFadeInstance {
     this.setActive(next);
     this.fadeOut(next, () => {
       if (next === 0) {
+        // Keep the first item visible behind the stack before the next cycle.
         this.items[next].style.zIndex = '0';
         this.items[next].style.opacity = '1';
       } else if (next + 1 >= this.items.length) {
+        // Reset the stack after the final item has faded out.
         this.setZIndex();
         this.items.forEach((item) => {
           item.style.opacity = '1';
