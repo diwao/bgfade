@@ -203,6 +203,40 @@ describe('bgfade', () => {
     expect(items[1].classList.contains('is-active')).toBe(false);
   });
 
+  it('preserves active classes that existed before initialization after fade', () => {
+    const target = createList();
+    const items = Array.from(target.querySelectorAll<HTMLElement>('li'));
+    items[0].classList.add('is-active');
+
+    const instance = bgfade('target', {
+      activeClass: 'is-active',
+      autoStart: false,
+      speed: 1,
+    });
+    instance.next();
+    vi.advanceTimersByTime(1000);
+
+    expect(items[0].classList.contains('is-active')).toBe(true);
+  });
+
+  it('removes only active classes added by bgfade after fade', () => {
+    const target = createList();
+    const items = Array.from(target.querySelectorAll<HTMLElement>('li'));
+
+    const instance = bgfade('target', {
+      activeClass: 'is-active',
+      autoStart: false,
+      speed: 1,
+    });
+    instance.next();
+
+    expect(items[0].classList.contains('is-active')).toBe(true);
+
+    vi.advanceTimersByTime(1000);
+
+    expect(items[0].classList.contains('is-active')).toBe(false);
+  });
+
   it('clears in-flight fade timers on destroy', () => {
     const target = createList();
     const items = Array.from(target.querySelectorAll<HTMLElement>('li'));

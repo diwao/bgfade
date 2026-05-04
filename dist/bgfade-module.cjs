@@ -116,7 +116,7 @@ var BgFade = class {
     this.clearAnimationTimer();
     const next = this.getNextIndex();
     this.setActive(next);
-    this.fadeOut(this.items[next], () => {
+    this.fadeOut(next, () => {
       if (next === 0) {
         this.items[next].style.zIndex = "0";
         this.items[next].style.opacity = "1";
@@ -137,9 +137,7 @@ var BgFade = class {
     this.target.style.position = this.originalTargetPosition;
     this.items.forEach((item, index) => {
       const original = this.originalItemStyles[index];
-      if (!original.hadActiveClass) {
-        item.classList.remove(this.options.activeClass);
-      }
+      this.removeAddedActiveClass(item, index);
       item.style.position = original.position;
       item.style.transitionDuration = original.transitionDuration;
       item.style.transitionProperty = original.transitionProperty;
@@ -177,14 +175,20 @@ var BgFade = class {
     }
     this.items[activeIndex].classList.add(this.options.activeClass);
   }
-  fadeOut(item, callback) {
+  fadeOut(index, callback) {
+    const item = this.items[index];
     item.style.opacity = "0";
     const fadeTimer = setTimeout(() => {
       callback();
-      item.classList.remove(this.options.activeClass);
+      this.removeAddedActiveClass(item, index);
       this.fadeTimers.delete(fadeTimer);
     }, this.options.speed * 1e3);
     this.fadeTimers.add(fadeTimer);
+  }
+  removeAddedActiveClass(item, index) {
+    if (!this.originalItemStyles[index].hadActiveClass) {
+      item.classList.remove(this.options.activeClass);
+    }
   }
   scheduleNext() {
     this.animationTimer = setTimeout(() => {

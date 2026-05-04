@@ -158,7 +158,7 @@ class BgFade implements BgFadeInstance {
 
     const next = this.getNextIndex();
     this.setActive(next);
-    this.fadeOut(this.items[next], () => {
+    this.fadeOut(next, () => {
       if (next === 0) {
         this.items[next].style.zIndex = '0';
         this.items[next].style.opacity = '1';
@@ -181,9 +181,7 @@ class BgFade implements BgFadeInstance {
     this.target.style.position = this.originalTargetPosition;
     this.items.forEach((item, index) => {
       const original = this.originalItemStyles[index];
-      if (!original.hadActiveClass) {
-        item.classList.remove(this.options.activeClass);
-      }
+      this.removeAddedActiveClass(item, index);
       item.style.position = original.position;
       item.style.transitionDuration = original.transitionDuration;
       item.style.transitionProperty = original.transitionProperty;
@@ -229,14 +227,21 @@ class BgFade implements BgFadeInstance {
     this.items[activeIndex].classList.add(this.options.activeClass);
   }
 
-  private fadeOut(item: HTMLElement, callback: () => void): void {
+  private fadeOut(index: number, callback: () => void): void {
+    const item = this.items[index];
     item.style.opacity = '0';
     const fadeTimer = setTimeout(() => {
       callback();
-      item.classList.remove(this.options.activeClass);
+      this.removeAddedActiveClass(item, index);
       this.fadeTimers.delete(fadeTimer);
     }, this.options.speed * 1000);
     this.fadeTimers.add(fadeTimer);
+  }
+
+  private removeAddedActiveClass(item: HTMLElement, index: number): void {
+    if (!this.originalItemStyles[index].hadActiveClass) {
+      item.classList.remove(this.options.activeClass);
+    }
   }
 
   private scheduleNext(): void {
