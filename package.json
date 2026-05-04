@@ -42,7 +42,7 @@
   "bugs": {
     "url": "https://github.com/diwao/bgfade/issues"
   },
-  "homepage": "https://bgfade.site",
+  "homepage": "https://bgfade.diwao.com/",
   "devDependencies": {
     "@types/node": "^25.6.0",
     "jsdom": "^29.1.1",
