@@ -56,6 +56,18 @@ const normalizeOptions = (options: BgFadeOptions = {}): NormalizedOptions => ({
   autoStart: options.autoStart !== false,
 });
 
+const validateActiveClass = (activeClass: string): void => {
+  if (
+    activeClass.length === 0 ||
+    activeClass.trim() !== activeClass ||
+    /\s/.test(activeClass)
+  ) {
+    throw new Error(
+      'bgfade activeClass must be a single non-whitespace token',
+    );
+  }
+};
+
 const resolveTarget = (target: BgFadeTarget): HTMLElement => {
   if (typeof target !== 'string') {
     if (typeof HTMLElement === 'undefined' || !(target instanceof HTMLElement)) {
@@ -87,9 +99,7 @@ class BgFade implements BgFadeInstance {
 
   constructor(target: BgFadeTarget, options?: BgFadeOptions) {
     this.options = normalizeOptions(options);
-    if (this.options.activeClass === '') {
-      throw new Error('bgfade activeClass must not be empty');
-    }
+    validateActiveClass(this.options.activeClass);
 
     this.target = resolveTarget(target);
     try {

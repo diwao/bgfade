@@ -288,7 +288,31 @@ describe('bgfade', () => {
     createList();
 
     expect(() => bgfade('target', { activeClass: '' })).toThrow(
-      'bgfade activeClass must not be empty',
+      'bgfade activeClass must be a single non-whitespace token',
+    );
+  });
+
+  it('throws a clear error when activeClass is whitespace', () => {
+    createList();
+
+    expect(() => bgfade('target', { activeClass: ' ' })).toThrow(
+      'bgfade activeClass must be a single non-whitespace token',
+    );
+  });
+
+  it('throws a clear error when activeClass has multiple tokens', () => {
+    createList();
+
+    expect(() => bgfade('target', { activeClass: 'foo bar' })).toThrow(
+      'bgfade activeClass must be a single non-whitespace token',
+    );
+  });
+
+  it('throws a clear error when activeClass has surrounding whitespace', () => {
+    createList();
+
+    expect(() => bgfade('target', { activeClass: ' is-active ' })).toThrow(
+      'bgfade activeClass must be a single non-whitespace token',
     );
   });
 

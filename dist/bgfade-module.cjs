@@ -39,6 +39,13 @@ var normalizeOptions = (options = {}) => ({
   activeClass: options.activeClass ?? DEFAULT_ACTIVE_CLASS,
   autoStart: options.autoStart !== false
 });
+var validateActiveClass = (activeClass) => {
+  if (activeClass.length === 0 || activeClass.trim() !== activeClass || /\s/.test(activeClass)) {
+    throw new Error(
+      "bgfade activeClass must be a single non-whitespace token"
+    );
+  }
+};
 var resolveTarget = (target) => {
   if (typeof target !== "string") {
     if (typeof HTMLElement === "undefined" || !(target instanceof HTMLElement)) {
@@ -59,9 +66,7 @@ var BgFade = class {
     this.active = false;
     this.current = -1;
     this.options = normalizeOptions(options);
-    if (this.options.activeClass === "") {
-      throw new Error("bgfade activeClass must not be empty");
-    }
+    validateActiveClass(this.options.activeClass);
     this.target = resolveTarget(target);
     try {
       this.items = Array.from(
