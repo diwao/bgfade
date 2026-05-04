@@ -35,8 +35,8 @@ var normalizeNumber = (value, defaultValue) => {
 var normalizeOptions = (options = {}) => ({
   speed: normalizeNumber(options.speed, DEFAULT_SPEED),
   duration: normalizeNumber(options.duration, DEFAULT_DURATION),
-  selector: options.selector || DEFAULT_SELECTOR,
-  activeClass: options.activeClass || DEFAULT_ACTIVE_CLASS,
+  selector: options.selector ?? DEFAULT_SELECTOR,
+  activeClass: options.activeClass ?? DEFAULT_ACTIVE_CLASS,
   autoStart: options.autoStart !== false
 });
 var resolveTarget = (target) => {
@@ -59,6 +59,9 @@ var BgFade = class {
     this.active = false;
     this.current = -1;
     this.options = normalizeOptions(options);
+    if (this.options.activeClass === "") {
+      throw new Error("bgfade activeClass must not be empty");
+    }
     this.target = resolveTarget(target);
     try {
       this.items = Array.from(
@@ -76,7 +79,8 @@ var BgFade = class {
       transitionDuration: item.style.transitionDuration,
       transitionProperty: item.style.transitionProperty,
       opacity: item.style.opacity,
-      zIndex: item.style.zIndex
+      zIndex: item.style.zIndex,
+      hadActiveClass: item.classList.contains(this.options.activeClass)
     }));
     this.setup();
     this.setActive(-1);
@@ -133,7 +137,9 @@ var BgFade = class {
     this.target.style.position = this.originalTargetPosition;
     this.items.forEach((item, index) => {
       const original = this.originalItemStyles[index];
-      item.classList.remove(this.options.activeClass);
+      if (!original.hadActiveClass) {
+        item.classList.remove(this.options.activeClass);
+      }
       item.style.position = original.position;
       item.style.transitionDuration = original.transitionDuration;
       item.style.transitionProperty = original.transitionProperty;

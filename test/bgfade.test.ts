@@ -187,6 +187,22 @@ describe('bgfade', () => {
     expect(item.classList.contains('is-active')).toBe(false);
   });
 
+  it('preserves active classes that existed before initialization on destroy', () => {
+    const target = createList();
+    const items = Array.from(target.querySelectorAll<HTMLElement>('li'));
+    items[0].classList.add('is-active');
+
+    const instance = bgfade('target', {
+      activeClass: 'is-active',
+      autoStart: false,
+    });
+    instance.next();
+    instance.destroy();
+
+    expect(items[0].classList.contains('is-active')).toBe(true);
+    expect(items[1].classList.contains('is-active')).toBe(false);
+  });
+
   it('clears in-flight fade timers on destroy', () => {
     const target = createList();
     const items = Array.from(target.querySelectorAll<HTMLElement>('li'));
@@ -223,6 +239,22 @@ describe('bgfade', () => {
 
     expect(() => bgfade('target', { selector: '[' })).toThrow(
       'bgfade selector is invalid: [',
+    );
+  });
+
+  it('throws a clear error when selector is empty', () => {
+    createList();
+
+    expect(() => bgfade('target', { selector: '' })).toThrow(
+      'bgfade selector is invalid: ',
+    );
+  });
+
+  it('throws a clear error when activeClass is empty', () => {
+    createList();
+
+    expect(() => bgfade('target', { activeClass: '' })).toThrow(
+      'bgfade activeClass must not be empty',
     );
   });
 

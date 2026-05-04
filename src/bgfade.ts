@@ -35,6 +35,7 @@ interface StoredStyle {
   transitionProperty: string;
   opacity: string;
   zIndex: string;
+  hadActiveClass: boolean;
 }
 
 const DEFAULT_SPEED = 3;
@@ -50,8 +51,8 @@ const normalizeNumber = (value: unknown, defaultValue: number): number => {
 const normalizeOptions = (options: BgFadeOptions = {}): NormalizedOptions => ({
   speed: normalizeNumber(options.speed, DEFAULT_SPEED),
   duration: normalizeNumber(options.duration, DEFAULT_DURATION),
-  selector: options.selector || DEFAULT_SELECTOR,
-  activeClass: options.activeClass || DEFAULT_ACTIVE_CLASS,
+  selector: options.selector ?? DEFAULT_SELECTOR,
+  activeClass: options.activeClass ?? DEFAULT_ACTIVE_CLASS,
   autoStart: options.autoStart !== false,
 });
 
@@ -86,6 +87,10 @@ class BgFade implements BgFadeInstance {
 
   constructor(target: BgFadeTarget, options?: BgFadeOptions) {
     this.options = normalizeOptions(options);
+    if (this.options.activeClass === '') {
+      throw new Error('bgfade activeClass must not be empty');
+    }
+
     this.target = resolveTarget(target);
     try {
       this.items = Array.from(
@@ -106,6 +111,7 @@ class BgFade implements BgFadeInstance {
       transitionProperty: item.style.transitionProperty,
       opacity: item.style.opacity,
       zIndex: item.style.zIndex,
+      hadActiveClass: item.classList.contains(this.options.activeClass),
     }));
 
     this.setup();
@@ -175,7 +181,9 @@ class BgFade implements BgFadeInstance {
     this.target.style.position = this.originalTargetPosition;
     this.items.forEach((item, index) => {
       const original = this.originalItemStyles[index];
-      item.classList.remove(this.options.activeClass);
+      if (!original.hadActiveClass) {
+        item.classList.remove(this.options.activeClass);
+      }
       item.style.position = original.position;
       item.style.transitionDuration = original.transitionDuration;
       item.style.transitionProperty = original.transitionProperty;
