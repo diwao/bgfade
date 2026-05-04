@@ -1,5 +1,7 @@
 # bgfade
 
+[![Test](https://github.com/diwao/bgfade/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/diwao/bgfade/actions/workflows/test.yml)
+
 bgfade switches DOM elements with a fade animation.
 
 ## Installation
