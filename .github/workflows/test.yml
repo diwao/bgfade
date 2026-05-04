@@ -31,3 +31,9 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify no generated files changed
+        run: git diff --exit-code
