@@ -1,12 +1,22 @@
-type BgFadeTarget = string | HTMLElement;
-interface BgFadeOptions {
+declare function bgfade(
+  target: bgfade.BgFadeTarget,
+  options?: bgfade.BgFadeOptions,
+): bgfade.BgFadeInstance;
+
+declare namespace bgfade {
+  export { bgfade as default };
+
+  export type BgFadeTarget = string | HTMLElement;
+
+  export interface BgFadeOptions {
     speed?: number | string;
     duration?: number | string;
     selector?: string;
     activeClass?: string;
     autoStart?: boolean;
-}
-interface BgFadeInstance {
+  }
+
+  export interface BgFadeInstance {
     readonly target: HTMLElement;
     readonly items: HTMLElement[];
     readonly currentIndex: number;
@@ -17,7 +27,9 @@ interface BgFadeInstance {
     resume(): void;
     next(): void;
     destroy(): void;
-}
-declare const createBgFade: (target: BgFadeTarget, options?: BgFadeOptions) => BgFadeInstance;
+  }
 
-export { type BgFadeInstance, type BgFadeOptions, type BgFadeTarget, createBgFade, createBgFade as default };
+  export const createBgFade: typeof bgfade;
+}
+
+export = bgfade;

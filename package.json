@@ -8,9 +8,14 @@
   "types": "./dist/bgfade.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/bgfade.d.ts",
-      "import": "./dist/bgfade.js",
-      "require": "./dist/bgfade.cjs"
+      "import": {
+        "types": "./dist/bgfade.d.ts",
+        "default": "./dist/bgfade.js"
+      },
+      "require": {
+        "types": "./dist/bgfade.d.cts",
+        "default": "./dist/bgfade.cjs"
+      }
     }
   },
   "files": [
@@ -20,7 +25,8 @@
     "build": "tsup && node scripts/write-cjs-wrapper.cjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "typecheck:exports": "tsc test/types/cjs-require.cts test/types/esm-import.mts --ignoreConfig --module Node16 --moduleResolution node16 --target es2020 --strict --skipLibCheck --noEmit --ignoreDeprecations 6.0"
   },
   "repository": {
     "type": "git",
