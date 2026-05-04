@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./dist/bgfade.cjs",
   "module": "./dist/bgfade.js",
-  "types": "./dist/bgfade.d.ts",
+  "types": "./dist/bgfade.d.cts",
   "exports": {
     ".": {
       "import": {
@@ -26,7 +26,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "typecheck:exports": "tsc test/types/cjs-require.cts test/types/esm-import.mts --ignoreConfig --module Node16 --moduleResolution node16 --target es2020 --strict --skipLibCheck --noEmit --ignoreDeprecations 6.0"
+    "typecheck:exports": "tsc test/types/cjs-require.cts test/types/esm-import.mts --ignoreConfig --module Node16 --moduleResolution node16 --target es2020 --strict --skipLibCheck --noEmit --ignoreDeprecations 6.0 && node scripts/check-classic-types.cjs"
   },
   "repository": {
     "type": "git",
