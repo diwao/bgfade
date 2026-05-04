@@ -76,7 +76,7 @@ class BgFade implements BgFadeInstance {
   private readonly originalTargetPosition: string;
   private readonly originalItemStyles: StoredStyle[];
   private animationTimer: ReturnType<typeof setTimeout> | null = null;
-  private fadeTimer: ReturnType<typeof setTimeout> | null = null;
+  private fadeTimers = new Set<ReturnType<typeof setTimeout>>();
   private active = false;
   private current = -1;
 
@@ -217,12 +217,12 @@ class BgFade implements BgFadeInstance {
 
   private fadeOut(item: HTMLElement, callback: () => void): void {
     item.style.opacity = '0';
-    this.clearFadeTimer();
-    this.fadeTimer = setTimeout(() => {
+    const fadeTimer = setTimeout(() => {
       callback();
       item.classList.remove(this.options.activeClass);
-      this.fadeTimer = null;
+      this.fadeTimers.delete(fadeTimer);
     }, this.options.speed * 1000);
+    this.fadeTimers.add(fadeTimer);
   }
 
   private clearTimers(): void {
@@ -238,10 +238,10 @@ class BgFade implements BgFadeInstance {
   }
 
   private clearFadeTimer(): void {
-    if (this.fadeTimer !== null) {
-      clearTimeout(this.fadeTimer);
-      this.fadeTimer = null;
-    }
+    this.fadeTimers.forEach((fadeTimer) => {
+      clearTimeout(fadeTimer);
+    });
+    this.fadeTimers.clear();
   }
 }
 

@@ -27,7 +27,7 @@ var resolveTarget = (target) => {
 var BgFade = class {
   constructor(target, options) {
     this.animationTimer = null;
-    this.fadeTimer = null;
+    this.fadeTimers = /* @__PURE__ */ new Set();
     this.active = false;
     this.current = -1;
     this.options = normalizeOptions(options);
@@ -143,12 +143,12 @@ var BgFade = class {
   }
   fadeOut(item, callback) {
     item.style.opacity = "0";
-    this.clearFadeTimer();
-    this.fadeTimer = setTimeout(() => {
+    const fadeTimer = setTimeout(() => {
       callback();
       item.classList.remove(this.options.activeClass);
-      this.fadeTimer = null;
+      this.fadeTimers.delete(fadeTimer);
     }, this.options.speed * 1e3);
+    this.fadeTimers.add(fadeTimer);
   }
   clearTimers() {
     this.clearAnimationTimer();
@@ -161,10 +161,10 @@ var BgFade = class {
     }
   }
   clearFadeTimer() {
-    if (this.fadeTimer !== null) {
-      clearTimeout(this.fadeTimer);
-      this.fadeTimer = null;
-    }
+    this.fadeTimers.forEach((fadeTimer) => {
+      clearTimeout(fadeTimer);
+    });
+    this.fadeTimers.clear();
   }
 };
 var createBgFade = (target, options) => new BgFade(target, options);

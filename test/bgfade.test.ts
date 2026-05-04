@@ -103,6 +103,33 @@ describe('bgfade', () => {
     expect(instance.currentIndex).toBe(0);
   });
 
+  it('lets overlapping fade timers finish independently', () => {
+    const target = createList();
+    const items = Array.from(target.querySelectorAll<HTMLElement>('li'));
+
+    const instance = bgfade('target', {
+      speed: 3,
+      duration: 1,
+      autoStart: false,
+    });
+
+    instance.next();
+    vi.advanceTimersByTime(1000);
+    instance.next();
+
+    expect(items[0].classList.contains('bg-active')).toBe(true);
+    expect(items[1].classList.contains('bg-active')).toBe(true);
+
+    vi.advanceTimersByTime(2000);
+
+    expect(items[0].classList.contains('bg-active')).toBe(false);
+    expect(items[1].classList.contains('bg-active')).toBe(true);
+
+    vi.advanceTimersByTime(1000);
+
+    expect(items[1].classList.contains('bg-active')).toBe(false);
+  });
+
   it('supports custom selectors and active classes', () => {
     document.body.innerHTML = `
       <div id="target">
