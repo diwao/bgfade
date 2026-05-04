@@ -41,6 +41,9 @@ var normalizeOptions = (options = {}) => ({
 });
 var resolveTarget = (target) => {
   if (typeof target !== "string") {
+    if (typeof HTMLElement === "undefined" || !(target instanceof HTMLElement)) {
+      throw new Error("bgfade target must be an HTMLElement or element id");
+    }
     return target;
   }
   const element = document.getElementById(target);
@@ -57,9 +60,13 @@ var BgFade = class {
     this.current = -1;
     this.options = normalizeOptions(options);
     this.target = resolveTarget(target);
-    this.items = Array.from(
-      this.target.querySelectorAll(this.options.selector)
-    );
+    try {
+      this.items = Array.from(
+        this.target.querySelectorAll(this.options.selector)
+      );
+    } catch {
+      throw new Error(`bgfade selector is invalid: ${this.options.selector}`);
+    }
     if (this.items.length === 0) {
       throw new Error(`bgfade target has no items: ${this.options.selector}`);
     }
@@ -172,10 +179,6 @@ var BgFade = class {
       this.fadeTimers.delete(fadeTimer);
     }, this.options.speed * 1e3);
     this.fadeTimers.add(fadeTimer);
-  }
-  clearTimers() {
-    this.clearAnimationTimer();
-    this.clearFadeTimer();
   }
   scheduleNext() {
     this.animationTimer = setTimeout(() => {

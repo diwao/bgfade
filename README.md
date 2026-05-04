@@ -84,11 +84,11 @@ bg.destroy();
 | method/property | description |
 | ---- | ---- |
 | `start()` | Starts the animation if it is stopped. |
-| `stop()` | Stops the animation and clears active timers. |
+| `stop()` | Stops scheduling future animation steps. Any in-flight fade continues until it finishes. |
 | `pause()` | Alias of `stop()`. |
 | `resume()` | Alias of `start()`. |
 | `next()` | Advances one step manually. |
-| `destroy()` | Stops the animation and restores styles/classes changed by bgfade. |
+| `destroy()` | Stops the animation, clears in-flight fade timers, and restores styles/classes changed by bgfade. |
 | `currentIndex` | Current fading item index. Initial value is `-1`. |
 | `isRunning` | Whether the animation is currently running. |
 

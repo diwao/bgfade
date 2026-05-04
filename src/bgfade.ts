@@ -57,6 +57,10 @@ const normalizeOptions = (options: BgFadeOptions = {}): NormalizedOptions => ({
 
 const resolveTarget = (target: BgFadeTarget): HTMLElement => {
   if (typeof target !== 'string') {
+    if (typeof HTMLElement === 'undefined' || !(target instanceof HTMLElement)) {
+      throw new Error('bgfade target must be an HTMLElement or element id');
+    }
+
     return target;
   }
 
@@ -83,9 +87,13 @@ class BgFade implements BgFadeInstance {
   constructor(target: BgFadeTarget, options?: BgFadeOptions) {
     this.options = normalizeOptions(options);
     this.target = resolveTarget(target);
-    this.items = Array.from(
-      this.target.querySelectorAll<HTMLElement>(this.options.selector),
-    );
+    try {
+      this.items = Array.from(
+        this.target.querySelectorAll<HTMLElement>(this.options.selector),
+      );
+    } catch {
+      throw new Error(`bgfade selector is invalid: ${this.options.selector}`);
+    }
 
     if (this.items.length === 0) {
       throw new Error(`bgfade target has no items: ${this.options.selector}`);
@@ -221,11 +229,6 @@ class BgFade implements BgFadeInstance {
       this.fadeTimers.delete(fadeTimer);
     }, this.options.speed * 1000);
     this.fadeTimers.add(fadeTimer);
-  }
-
-  private clearTimers(): void {
-    this.clearAnimationTimer();
-    this.clearFadeTimer();
   }
 
   private scheduleNext(): void {

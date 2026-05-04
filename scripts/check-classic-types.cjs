@@ -9,30 +9,35 @@ const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'bgfade-types-'));
 const nodeModulesDir = path.join(tempDir, 'node_modules');
 const packageLink = path.join(nodeModulesDir, 'bgfade');
 const fixtureCopyPath = path.join(tempDir, 'cjs-require-classic.ts');
-const tscPath = path.join(rootDir, 'node_modules', '.bin', 'tsc');
+const tscBinPath = require.resolve('typescript/bin/tsc');
 
-fs.mkdirSync(nodeModulesDir, { recursive: true });
-fs.symlinkSync(rootDir, packageLink, 'dir');
-fs.copyFileSync(fixturePath, fixtureCopyPath);
+try {
+  fs.mkdirSync(nodeModulesDir, { recursive: true });
+  fs.symlinkSync(rootDir, packageLink, 'dir');
+  fs.copyFileSync(fixturePath, fixtureCopyPath);
 
-execFileSync(
-  tscPath,
-  [
-    fixtureCopyPath,
-    '--ignoreConfig',
-    '--module',
-    'commonjs',
-    '--moduleResolution',
-    'node',
-    '--target',
-    'es2020',
-    '--strict',
-    '--skipLibCheck',
-    '--noEmit',
-    '--ignoreDeprecations',
-    '6.0',
-  ],
-  {
-    stdio: 'inherit',
-  },
-);
+  execFileSync(
+    process.execPath,
+    [
+      tscBinPath,
+      fixtureCopyPath,
+      '--ignoreConfig',
+      '--module',
+      'commonjs',
+      '--moduleResolution',
+      'node',
+      '--target',
+      'es2020',
+      '--strict',
+      '--skipLibCheck',
+      '--noEmit',
+      '--ignoreDeprecations',
+      '6.0',
+    ],
+    {
+      stdio: 'inherit',
+    },
+  );
+} finally {
+  fs.rmSync(tempDir, { recursive: true, force: true });
+}

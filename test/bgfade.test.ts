@@ -212,6 +212,20 @@ describe('bgfade', () => {
     );
   });
 
+  it('throws a clear error when target is not an HTMLElement', () => {
+    expect(() => bgfade(null as unknown as HTMLElement)).toThrow(
+      'bgfade target must be an HTMLElement or element id',
+    );
+  });
+
+  it('throws a clear error when selector is invalid', () => {
+    createList();
+
+    expect(() => bgfade('target', { selector: '[' })).toThrow(
+      'bgfade selector is invalid: [',
+    );
+  });
+
   it('throws a clear error when target has no matching items', () => {
     document.body.innerHTML = '<ul id="target"></ul>';
 
