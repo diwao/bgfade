@@ -1,0 +1,32 @@
+name: Dependency audit
+
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: '0 0 * * 1' # Monday 09:00 JST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Scheduled workflows run from the default branch; audit dev explicitly.
+          ref: ${{ github.event_name == 'schedule' && 'dev' || github.ref }}
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Audit all dependencies from the lockfile
+        run: npm audit --package-lock-only --include=dev --audit-level=low
