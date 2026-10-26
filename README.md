@@ -71,7 +71,7 @@ bgfade('target', {
 | `activeClass` | `string` | `bg-active` | Class added to the next active item. |
 | `autoStart` | `boolean` | `true` | Starts the animation automatically. |
 
-`speed` and `duration` keep the previous behavior: invalid values use defaults and negative values are converted to positive values.
+`speed` and `duration` accept numbers and numeric strings in seconds. Negative values are converted to positive values; zero and fractional values remain supported. Non-numeric values, non-finite values (such as `Infinity`), and absolute values greater than `2147483.647` seconds use the corresponding default (`speed: 3`, `duration: 4`). This upper limit keeps timer delays within the signed 32-bit millisecond range so oversized delays cannot unexpectedly fire immediately.
 
 ## Instance API
 

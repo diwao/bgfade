@@ -42,10 +42,14 @@ const DEFAULT_SPEED = 3;
 const DEFAULT_DURATION = 4;
 const DEFAULT_SELECTOR = 'li';
 const DEFAULT_ACTIVE_CLASS = 'bg-active';
+// setTimeout delays above the signed 32-bit millisecond limit can fire early.
+const MAX_TIMER_SECONDS = 2147483647 / 1000;
 
 const normalizeNumber = (value: unknown, defaultValue: number): number => {
-  const numberValue = Number(value);
-  return Number.isNaN(numberValue) ? defaultValue : Math.abs(numberValue);
+  const numberValue = Math.abs(Number(value));
+  return Number.isFinite(numberValue) && numberValue <= MAX_TIMER_SECONDS
+    ? numberValue
+    : defaultValue;
 };
 
 const normalizeOptions = (options: BgFadeOptions = {}): NormalizedOptions => ({
