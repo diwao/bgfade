@@ -26,7 +26,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: '>=24.22.1 <25'
+          check-latest: true
 
       - name: Audit all dependencies from the lockfile
         run: npm audit --package-lock-only --include=dev --audit-level=low
