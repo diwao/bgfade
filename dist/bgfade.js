@@ -3,9 +3,10 @@ var DEFAULT_SPEED = 3;
 var DEFAULT_DURATION = 4;
 var DEFAULT_SELECTOR = "li";
 var DEFAULT_ACTIVE_CLASS = "bg-active";
+var MAX_TIMER_SECONDS = 2147483647 / 1e3;
 var normalizeNumber = (value, defaultValue) => {
-  const numberValue = Number(value);
-  return Number.isNaN(numberValue) ? defaultValue : Math.abs(numberValue);
+  const numberValue = Math.abs(Number(value));
+  return Number.isFinite(numberValue) && numberValue <= MAX_TIMER_SECONDS ? numberValue : defaultValue;
 };
 var normalizeOptions = (options = {}) => ({
   speed: normalizeNumber(options.speed, DEFAULT_SPEED),

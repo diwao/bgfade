@@ -71,7 +71,7 @@ bgfade('target', {
 | `activeClass` | `string` | `bg-active` | Class added to the next active item. |
 | `autoStart` | `boolean` | `true` | Starts the animation automatically. |
 
-`speed` and `duration` keep the previous behavior: invalid values use defaults and negative values are converted to positive values.
+`speed` and `duration` accept numbers and numeric strings in seconds. Negative values are converted to positive values; zero and fractional values remain supported. Non-numeric values, non-finite values (such as `Infinity`), and absolute values greater than `2147483.647` seconds use the corresponding default (`speed: 3`, `duration: 4`). This upper limit keeps timer delays within the signed 32-bit millisecond range so oversized delays cannot unexpectedly fire immediately.
 
 ## Instance API
 
@@ -101,3 +101,11 @@ bg.destroy();
 - The target must have at least one item matching `selector`.
 - bgfade sets inline styles on the target and each item during initialization.
 - If `duration` is shorter than `speed`, the next step may begin before the current fade finishes.
+
+## Dependency security
+
+- Dependabot checks npm dependencies and GitHub Actions weekly on Monday at 09:00 JST and opens update pull requests against `dev`.
+- The Dependency audit workflow checks the lockfile, including development dependencies, on pull requests, pushes, and manual runs. It fails on low or higher severity vulnerabilities and registry errors, without installing dependencies or running their lifecycle scripts.
+- A weekly audit runs on Monday at 09:00 JST and checks `dev` for newly published advisories.
+- To activate Dependabot and scheduled audits, these configuration files must also be merged into the repository's default branch. Dependabot security updates operate on the default branch; `target-branch: dev` directs version-update pull requests only.
+- Review dependency-update pull requests and require successful tests and audits before merging. GitHub Actions use major-version tags such as `@v4`; Dependabot proposes version updates.
