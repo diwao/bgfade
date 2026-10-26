@@ -55,6 +55,80 @@ describe('bgfade', () => {
     expect(instance.items[0].style.transitionDuration).toBe('2s');
   });
 
+  it.each([
+    NaN,
+    Infinity,
+    -Infinity,
+    'Infinity',
+    '-Infinity',
+    '1e309',
+    'bad-value',
+    2147483.648,
+    -2147483.648,
+    Number.MAX_VALUE,
+  ])('uses default timer delays for invalid or overflowing value %s', (value) => {
+    createList();
+    const instance = bgfade('target', { speed: value, duration: value });
+
+    expect(instance.items[0].style.transitionDuration).toBe('3s');
+    vi.advanceTimersByTime(3999);
+    expect(instance.currentIndex).toBe(-1);
+    vi.advanceTimersByTime(1);
+    expect(instance.currentIndex).toBe(0);
+    vi.advanceTimersByTime(2999);
+    expect(instance.items[0].classList.contains('bg-active')).toBe(true);
+    vi.advanceTimersByTime(1);
+    expect(instance.items[0].classList.contains('bg-active')).toBe(false);
+    instance.destroy();
+  });
+
+  it.each([0, 0.25, '0.25', -0.25, '-0.25'])(
+    'preserves supported zero, fractional and negative value %s',
+    (value) => {
+      createList();
+      const seconds = Math.abs(Number(value));
+      const instance = bgfade('target', {
+        speed: value,
+        duration: value,
+        autoStart: false,
+      });
+
+      expect(instance.items[0].style.transitionDuration).toBe(`${seconds}s`);
+      instance.start();
+      vi.advanceTimersByTime(seconds * 1000);
+      expect(instance.currentIndex).toBeGreaterThanOrEqual(1);
+      expect(instance.items[0].classList.contains('bg-active')).toBe(false);
+      instance.destroy();
+    },
+  );
+
+  it('accepts the maximum timer delay for duration without advancing early', () => {
+    createList();
+    const instance = bgfade('target', { duration: 2147483.647 });
+
+    vi.advanceTimersByTime(2147483646);
+    expect(instance.currentIndex).toBe(-1);
+    vi.advanceTimersByTime(1);
+    expect(instance.currentIndex).toBe(0);
+    instance.destroy();
+  });
+
+  it('accepts the maximum timer delay for speed without finishing early', () => {
+    createList();
+    const instance = bgfade('target', {
+      speed: '2147483.647',
+      autoStart: false,
+    });
+
+    expect(instance.items[0].style.transitionDuration).toBe('2147483.647s');
+    instance.next();
+    vi.advanceTimersByTime(2147483646);
+    expect(instance.items[0].classList.contains('bg-active')).toBe(true);
+    vi.advanceTimersByTime(1);
+    expect(instance.items[0].classList.contains('bg-active')).toBe(false);
+    instance.destroy();
+  });
+
   it('automatically advances after the duration', () => {
     const target = createList();
     const items = Array.from(target.querySelectorAll<HTMLElement>('li'));
