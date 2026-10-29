@@ -20,4 +20,5 @@ interface BgFadeInstance {
 }
 declare const createBgFade: (target: BgFadeTarget, options?: BgFadeOptions) => BgFadeInstance;
 
-export { type BgFadeInstance, type BgFadeOptions, type BgFadeTarget, createBgFade, createBgFade as default };
+export { createBgFade, createBgFade as default };
+export type { BgFadeInstance, BgFadeOptions, BgFadeTarget };
