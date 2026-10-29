@@ -1,6 +1,6 @@
 {
   "name": "bgfade",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "A JavaScript library for fading between DOM elements.",
   "type": "module",
   "main": "./dist/bgfade.cjs",
@@ -45,9 +45,9 @@
   "homepage": "https://bgfade.diwao.com/",
   "devDependencies": {
     "@types/node": "^25.6.0",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.1.3",
     "tsup": "^9.0.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.5"
+    "vitest": "^5.0.5"
   }
 }
